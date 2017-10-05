@@ -28,6 +28,11 @@ public class HydraSettingsImpl extends JpsElementBase<HydraSettingsImpl> impleme
     return myState.hydraVersion;
   }
 
+  @Override
+  public String getNumberOfCores() {
+    return myState.noOfCores;
+  }
+
   @NotNull
   @Override
   public HydraSettingsImpl createCopy() {
@@ -42,5 +47,6 @@ public class HydraSettingsImpl extends JpsElementBase<HydraSettingsImpl> impleme
   public static class State {
     public boolean isHydraEnabled = false;
     public String hydraVersion = "";
+    public String noOfCores = Integer.toString(Runtime.getRuntime().availableProcessors()/2);
   }
 }

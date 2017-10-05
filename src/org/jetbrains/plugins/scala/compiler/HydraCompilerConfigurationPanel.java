@@ -18,6 +18,7 @@ public class HydraCompilerConfigurationPanel {
   protected JCheckBox enableHydraCheckBox;
   protected JButton downloadButton;
   protected SComboBox hydraVersionComboBox;
+  protected SComboBox noOfCoresComboBox;
 
   public HydraCompilerConfigurationPanel() {
     //TODO Hydra Version ComboBox
@@ -116,6 +117,11 @@ public class HydraCompilerConfigurationPanel {
     panel1.add(downloadButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     hydraVersionComboBox = new SComboBox();
     panel1.add(hydraVersionComboBox, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    noOfCoresComboBox = new SComboBox();
+    panel1.add(noOfCoresComboBox, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    final JLabel label4 = new JLabel();
+    label4.setText("Number of cores");
+    panel1.add(label4, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
   }
 
   /**

@@ -39,8 +39,15 @@ class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraComp
   passwordTextField.addFocusListener(focusListener)
   hydraVersionComboBox.setItems(downloadHydraVersions)
   downloadButton.addActionListener((_: ActionEvent) => onDownload())
+  noOfCoresComboBox.setItems(Array.range(1, Runtime.getRuntime.availableProcessors()/2 + 1).map(_.toString))
 
   def selectedVersion: String = hydraVersionComboBox.getSelectedItem.toString
+
+  def setSelectedVersion(version: String) = hydraVersionComboBox.setSelectedItem(version)
+
+  def selectedNoOfCores: String = noOfCoresComboBox.getSelectedItem.toString
+
+  def setSelectedNoOfCores(numberOfCores: String) = noOfCoresComboBox.setSelectedItem(numberOfCores)
 
   def onDownload(): Unit = {
     val scalaVersions = for {

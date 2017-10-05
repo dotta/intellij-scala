@@ -81,7 +81,7 @@ object CompilationData {
       val scalaVersion = CompilerData.compilerVersion(module)
       val hydraOptions =
         if (hydraSettings.isHydraEnabled && scalaVersion.nonEmpty && hydraGlobalSettings.containsArtifactsFor(scalaVersion.get, hydraSettings.getHydraVersion))
-          Seq("-sourcepath", outputGroups.map(_._1).mkString(File.pathSeparator), "-cpus", "2")
+          Seq("-sourcepath", outputGroups.map(_._1).mkString(File.pathSeparator), "-cpus", hydraSettings.getNumberOfCores)
         else
           Seq.empty
 

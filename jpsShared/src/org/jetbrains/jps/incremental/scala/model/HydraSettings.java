@@ -10,5 +10,6 @@ import java.util.Map;
  */
 public interface HydraSettings extends JpsElement {
   boolean isHydraEnabled();
+  String getNumberOfCores();
   String getHydraVersion();
 }
