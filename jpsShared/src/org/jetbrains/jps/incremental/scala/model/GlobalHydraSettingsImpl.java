@@ -15,7 +15,7 @@ import java.util.Map;
 public class GlobalHydraSettingsImpl extends JpsElementBase<GlobalHydraSettingsImpl> implements GlobalHydraSettings {
   public static final GlobalHydraSettings DEFAULT = new GlobalHydraSettingsImpl(new State());
 
-  private State myState;
+  private final State myState;
 
   public GlobalHydraSettingsImpl(State state) {
     this.myState = state;

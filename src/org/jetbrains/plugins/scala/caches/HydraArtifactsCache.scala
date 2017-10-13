@@ -18,10 +18,10 @@ object HydraArtifactsCache {
   private val GroupId = "com.triplequote"
 
   def checkIfArtifactsExist(artifacts: List[String]): Boolean = {
-    artifacts.map(new File(_)).forall(_.exists())
+    artifacts.forall(new File(_).exists())
   }
 
-  def downloadIfNotPresent(scalaVersion: String, hydraVersion: String, listener: (String) => Unit): Unit = {
+  def downloadIfNotPresent(scalaVersion: String, hydraVersion: String, listener: String => Unit): Unit = {
     val artifacts = hydraGlobalSettings.artifactPaths.get((scalaVersion, hydraVersion))
 
     if (artifacts.isEmpty) {
