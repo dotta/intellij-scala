@@ -53,7 +53,7 @@ class HydraApplicationSettingsState {
   }
 
   def checkIfArtifactsExist(artifacts: util.List[String]): Boolean = {
-    artifacts.asScala.map(new File(_)).forall(_.exists())
+    artifacts.asScala.forall(new File(_).exists())
   }
 }
 
