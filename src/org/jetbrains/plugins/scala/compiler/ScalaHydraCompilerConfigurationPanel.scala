@@ -28,7 +28,7 @@ class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraComp
     override def focusLost(e: FocusEvent): Unit = if (getUsername.nonEmpty && getPassword.nonEmpty &&
       (HydraCredentialsManager.getLogin != getUsername || HydraCredentialsManager.getPlainPassword != getPassword)) {
       HydraCredentialsManager.setCredentials(getUsername, getPassword)
-      hydraVersionComboBox.setItems(Versions.loadHydraVersions)
+      hydraVersionComboBox.setItems(downloadHydraVersions)
     }
   }
 
@@ -37,7 +37,7 @@ class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraComp
   userTextField.getDocument.addDocumentListener(documentAdapter)
   passwordTextField.getDocument.addDocumentListener(documentAdapter)
   passwordTextField.addFocusListener(focusListener)
-  hydraVersionComboBox.setItems(Versions.loadHydraVersions)
+  hydraVersionComboBox.setItems(downloadHydraVersions)
   downloadButton.addActionListener((_: ActionEvent) => onDownload())
 
   def selectedVersion: String = hydraVersionComboBox.getSelectedItem.toString
@@ -47,8 +47,15 @@ class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraComp
       module <- project.scalaModules
       scalaVersion <- module.sdk.compilerVersion
     } yield scalaVersion
+
     downloadVersionWithProgress(scalaVersions, selectedVersion)
     settings.hydraVersion = selectedVersion
+  }
+
+  private def downloadHydraVersions = {
+    (Versions.loadHydraVersions ++ hydraGlobalSettings.getDownloadedHydraVersions)
+      .distinct
+      .sortWith(Version(_) >= Version(_))
   }
 
   private def downloadVersionWithProgress(scalaVersions: Seq[String], hydraVersion: String): Unit = {
