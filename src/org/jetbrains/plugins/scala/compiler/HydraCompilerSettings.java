@@ -22,7 +22,7 @@ class HydraCompilerSettings implements PersistentStateComponent<HydraCompilerSet
 
   public String hydraVersion = "";
 
-  public String noOfCores = Integer.toString(Runtime.getRuntime().availableProcessors()/2);
+  public String noOfCores = Integer.toString((int) Math.ceil(Runtime.getRuntime().availableProcessors()/2D));
 
   public HydraCompilerSettings getState() {
     return this;

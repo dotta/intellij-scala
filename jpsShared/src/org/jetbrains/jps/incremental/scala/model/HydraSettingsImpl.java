@@ -47,6 +47,6 @@ public class HydraSettingsImpl extends JpsElementBase<HydraSettingsImpl> impleme
   public static class State {
     public boolean isHydraEnabled = false;
     public String hydraVersion = "";
-    public String noOfCores = Integer.toString(Runtime.getRuntime().availableProcessors()/2);
+    public String noOfCores = Integer.toString((int) Math.ceil(Runtime.getRuntime().availableProcessors()/2D));
   }
 }
