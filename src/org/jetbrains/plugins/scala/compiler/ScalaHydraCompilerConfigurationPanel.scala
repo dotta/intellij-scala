@@ -3,7 +3,8 @@ package org.jetbrains.plugins.scala.compiler
 import java.awt.event.{ActionEvent, FocusEvent, FocusListener}
 import javax.swing.event.DocumentEvent
 
-import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
+import com.intellij.openapi.ui.{Messages, TextComponentAccessor}
 import org.jetbrains.plugins.scala.caches.HydraArtifactsCache
 import org.jetbrains.plugins.scala.extensions
 import com.intellij.openapi.project.Project
@@ -17,6 +18,8 @@ import scala.util.{Failure, Success}
   * @author Maris Alexandru
   */
 class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraCompilerSettings, hydraGlobalSettings: HydraApplicationSettings) extends HydraCompilerConfigurationPanel {
+
+  private val fileChooserDescriptor = new FileChooserDescriptor(false, true, false, false, false, false)
 
   private val documentAdapter = new DocumentAdapter {
     override def textChanged(documentEvent: DocumentEvent): Unit = downloadButton.setEnabled(getUsername.nonEmpty && getPassword.nonEmpty)
@@ -40,14 +43,33 @@ class ScalaHydraCompilerConfigurationPanel(project: Project, settings: HydraComp
   hydraVersionComboBox.setItems(downloadHydraVersions)
   downloadButton.addActionListener((_: ActionEvent) => onDownload())
   noOfCoresComboBox.setItems(Array.range(1, Runtime.getRuntime.availableProcessors()/2 + 1).map(_.toString))
+  sourcePartitionerComboBox.setItems(SourcePartitioner.values.map(_.value).toArray)
+
+  hydraStoreDirectoryField.addBrowseFolderListener("", "Hydra Store Path", null, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT)
+  hydraStoreDirectoryField.setText(settings.getDefaultHydraStorePath)
+
+  hydraStoreDirectoryField.getTextField.getDocument.addDocumentListener(new DocumentAdapter() {
+    override protected def textChanged(e: DocumentEvent): Unit = {
+      hydraStoreDirectoryField.getTextField.setForeground(if (hydraStoreDirectoryField.getText == settings.getDefaultHydraStorePath) getDefaultValueColor
+      else getChangedValueColor)
+    }
+  })
 
   def selectedVersion: String = hydraVersionComboBox.getSelectedItem.toString
 
-  def setSelectedVersion(version: String) = hydraVersionComboBox.setSelectedItem(version)
+  def setSelectedVersion(version: String): Unit = hydraVersionComboBox.setSelectedItem(version)
 
   def selectedNoOfCores: String = noOfCoresComboBox.getSelectedItem.toString
 
-  def setSelectedNoOfCores(numberOfCores: String) = noOfCoresComboBox.setSelectedItem(numberOfCores)
+  def setSelectedNoOfCores(numberOfCores: String): Unit = noOfCoresComboBox.setSelectedItem(numberOfCores)
+
+  def selectedSourcePartitioner: String = sourcePartitionerComboBox.getSelectedItem.toString
+
+  def setSelectedSourcePartitioner(sourcePartitioner: String): Unit = sourcePartitionerComboBox.setSelectedItem(sourcePartitioner)
+
+  def getHydraStoreDirectory: String = hydraStoreDirectoryField.getText
+
+  def setHydraStoreDirectory(path: String): Unit = hydraStoreDirectoryField.setText(path)
 
   def onDownload(): Unit = {
     val scalaVersions = for {

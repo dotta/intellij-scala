@@ -12,4 +12,7 @@ public interface HydraSettings extends JpsElement {
   boolean isHydraEnabled();
   String getNumberOfCores();
   String getHydraVersion();
+  String getSourcePartitioner();
+  String getHydraStorePath();
+  String getProjectRoot();
 }

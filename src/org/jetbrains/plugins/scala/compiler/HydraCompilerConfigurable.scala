@@ -19,7 +19,9 @@ class HydraCompilerConfigurable (project: Project, settings: HydraCompilerSettin
     form.getUsername != HydraCredentialsManager.getLogin ||
     form.getPassword != HydraCredentialsManager.getPlainPassword ||
     form.selectedVersion != settings.hydraVersion ||
-    form.selectedNoOfCores != settings.noOfCores
+    form.selectedNoOfCores != settings.noOfCores ||
+    form.selectedSourcePartitioner != settings.sourcePartitioner ||
+    form.getHydraStoreDirectory != settings.hydraStorePath
 
   override def reset() {
     form.setUsername(HydraCredentialsManager.getLogin)
@@ -27,6 +29,8 @@ class HydraCompilerConfigurable (project: Project, settings: HydraCompilerSettin
     form.setIsHydraEnabled(settings.isHydraEnabled)
     form.setSelectedNoOfCores(settings.noOfCores)
     form.setSelectedVersion(settings.hydraVersion)
+    form.setSelectedSourcePartitioner(settings.sourcePartitioner)
+    form.setHydraStoreDirectory(settings.hydraStorePath)
   }
 
   override def apply() {
@@ -34,6 +38,8 @@ class HydraCompilerConfigurable (project: Project, settings: HydraCompilerSettin
     settings.hydraVersion = form.selectedVersion
     settings.isHydraEnabled = form.isHydraEnabled
     settings.noOfCores = form.selectedNoOfCores
+    settings.sourcePartitioner = form.selectedSourcePartitioner
+    settings.hydraStorePath = form.getHydraStoreDirectory
     HydraCredentialsManager.setCredentials(form.getUsername, form.getPassword)
   }
 }

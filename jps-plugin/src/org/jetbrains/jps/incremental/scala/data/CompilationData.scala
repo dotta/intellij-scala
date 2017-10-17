@@ -81,7 +81,10 @@ object CompilationData {
       val scalaVersion = CompilerData.compilerVersion(module)
       val hydraOptions =
         if (hydraSettings.isHydraEnabled && scalaVersion.nonEmpty && hydraGlobalSettings.containsArtifactsFor(scalaVersion.get, hydraSettings.getHydraVersion))
-          Seq("-sourcepath", outputGroups.map(_._1).mkString(File.pathSeparator), "-cpus", hydraSettings.getNumberOfCores)
+          Seq("-sourcepath", outputGroups.map(_._1).mkString(File.pathSeparator), "-cpus", hydraSettings.getNumberOfCores,
+            "-YsourcePartitioner:" + hydraSettings.getSourcePartitioner, "-YhydraStore", hydraSettings.getHydraStorePath,
+            "-YpartitionFile", hydraSettings.getHydraStorePath + module.getName, "-YrootDirectory", hydraSettings.getProjectRoot,
+            "-YtimingsFile", hydraSettings.getHydraStorePath + "timings.csv", "-YhydraTag", module.getName)
         else
           Seq.empty
 

@@ -4,39 +4,44 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.ex.JpsElementBase;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Maris Alexandru
  */
 public class HydraSettingsImpl extends JpsElementBase<HydraSettingsImpl> implements HydraSettings{
   public static final HydraSettings DEFAULT = new HydraSettingsImpl(new State());
 
-  private final State myState;
+  private final State state;
 
   public HydraSettingsImpl(State state) {
-    this.myState = state;
+    this.state = state;
   }
 
   @Override
-  public boolean isHydraEnabled() { return myState.isHydraEnabled; }
+  public boolean isHydraEnabled() { return state.isHydraEnabled; }
 
   @Override
   public String getHydraVersion() {
-    return myState.hydraVersion;
+    return state.hydraVersion;
   }
 
   @Override
   public String getNumberOfCores() {
-    return myState.noOfCores;
+    return state.noOfCores;
   }
+
+  @Override
+  public String getHydraStorePath() { return state.hydraStorePath; }
+
+  @Override
+  public String getSourcePartitioner() { return state.sourcePartitioner; }
+
+  @Override
+  public String getProjectRoot() { return state.projectRoot; }
 
   @NotNull
   @Override
   public HydraSettingsImpl createCopy() {
-    return new HydraSettingsImpl(XmlSerializerUtil.createCopy(myState));
+    return new HydraSettingsImpl(XmlSerializerUtil.createCopy(state));
   }
 
   @Override
@@ -48,5 +53,8 @@ public class HydraSettingsImpl extends JpsElementBase<HydraSettingsImpl> impleme
     public boolean isHydraEnabled = false;
     public String hydraVersion = "";
     public String noOfCores = Integer.toString((int) Math.ceil(Runtime.getRuntime().availableProcessors()/2D));
+    public String hydraStorePath = "";
+    public String sourcePartitioner = "";
+    public String projectRoot = "";
   }
 }
