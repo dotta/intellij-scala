@@ -3,6 +3,7 @@ package org.jetbrains.plugins.scala.project.template
 import java.io.{File, FileNotFoundException}
 
 import com.intellij.execution.process.{OSProcessHandler, ProcessAdapter, ProcessEvent}
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.Key
 import com.intellij.util.net.HttpConfigurable
@@ -13,6 +14,8 @@ import scala.collection.JavaConverters
   * @author Pavel Fatin
   */
 object Downloader {
+
+  private val Log = Logger.getInstance(this.getClass)
 
   private val DefaultCommands = Array("java",
     "-Djline.terminal=jline.UnsupportedTerminal",
@@ -32,8 +35,12 @@ object Downloader {
     def text(exitValue: Int = 0): String = {
       val result = builder.toString
       exitValue match {
-        case 0 => result
-        case _ => throw new RuntimeException(result)
+        case 0 =>
+          Log.info("DownloadProcess terminated normally (exitCode was 0)")
+          result
+        case _ =>
+          Log.error(s"DownloadProcess terminated abnormally (exitCode was $exitValue)")
+          throw new RuntimeException(result)
       }
     }
   }
@@ -50,9 +57,11 @@ object Downloader {
                            processAdapter: DownloadProcessAdapter,
                            sbtCommands: String*): Unit =
     usingTempFile("sbt-commands") { file =>
+      Log.info(s"Created sbt-commands temporary file in $file with content $sbtCommands")
       writeLinesTo(file, sbtCommands: _*)
 
       usingTempDirectory("sbt-project") { directory =>
+        Log.info(s"Created Temp SBT project in $directory")
         val process = executeOn(file, directory)
 
         val handler = new OSProcessHandler(process, null, null)
@@ -66,6 +75,8 @@ object Downloader {
 
   private def executeOn(file: File, directory: File) = {
     val launcherOptions = this.launcherOptions(file)
+    Log.info(s"SBT Launcher options $launcherOptions")
+    Log.info(s"Starting process with args: ${DefaultCommands ++ vmOptions ++ launcherOptions}")
     Runtime.getRuntime.exec(DefaultCommands ++ vmOptions ++ launcherOptions, null, directory)
   }
 

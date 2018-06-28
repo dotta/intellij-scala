@@ -31,8 +31,10 @@ object HydraDownloader {
                            repositoryRealm: String,
                            login: String,
                            password: String): Unit = {
-    val artifacts = hydraGlobalSettings.artifactPaths.get((scalaVersion, hydraVersion))
 
+    Log.info(s"HydraDownloader#downloadIfNotPresent - Checking artifacts for scalaVersion: $scalaVersion, hydraVersion: $hydraVersion")
+    val artifacts = hydraGlobalSettings.artifactPaths.get((scalaVersion, hydraVersion))
+    Log.info(s"HydraDownloader#downloadIfNotPresent - Found artifacts: $artifacts")
     if (artifacts.isEmpty) {
       val processAdapter = new DownloadProcessAdapter(manager)
       createTempSbtProject(
